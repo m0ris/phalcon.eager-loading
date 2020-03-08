@@ -1,10 +1,12 @@
-<?php 
+<?php
+
+//require __DIR__ . '/../vendor/autoload.php';
 
 const DB_CONFIG = [
-	'host'     => 'localhost',
+	'host'     => 'mysql.zak.dev.pl',
 	'port'     => '3306',
 	'username' => 'root',
-	'password' => '',
+	'password' => 'root',
 	'dbname'   => 'eager_loading_tests',
 	'charset'  => 'utf8mb4',
 ];

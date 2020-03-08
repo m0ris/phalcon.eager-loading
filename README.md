@@ -1,5 +1,13 @@
-This package provides eager-loading support for Phalcon 1.3.* - 2.0.*.
-Requires PHP 5.6, for PHP 5.3 support use _php-5.3_ branch
+This package provides eager-loading support for Phalcon 4.\*, requires PHP 7.2.
+
+For Phalcon 1.3.* - 2.0.* use phalcon_1-2 branch.
+
+Installation
+-----
+
+```bash
+composer require wojtek77/phalcon.eager-loading
+```
 
 Usage
 -----
