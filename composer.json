@@ -1,6 +1,6 @@
 {
 	"name": "wojtek77/phalcon.eager-loading",
-	"description": "Solves N+1 query problem in Phalcon Model",
+	"description": "Solves N+1 query problem in Phalcon Model (for Phalcon 4)",
 	"license": "Unlicense",
 	"autoload": {
 		"psr-4": {
