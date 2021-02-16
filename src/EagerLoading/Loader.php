@@ -16,6 +16,8 @@ final class Loader {
     /** @var boolean */
     protected $mustReturnAModel;
 
+    protected $options;
+
     /**
      * @param ModelInterface|ModelInterface[]|Simple $from
      * @param array $arguments
@@ -96,6 +98,12 @@ final class Loader {
 		$this->eagerLoads       = ($from === NULL || empty ($arguments)) ? [] : static::parseArguments($arguments);
     }
 
+    public function setOptions($options)
+    {
+        $this->options = $options;
+        return $this;
+    }
+
     /**
      * Create and get from a mixed $subject
      *
@@ -130,6 +138,19 @@ final class Loader {
      */
 	static public function fromModel(ModelInterface $subject, ...$arguments) {
         return (new static($subject, ...$arguments))->execute()->get();
+    }
+    
+    /**
+     * Create and get from a Model with any options like "soft delete"
+     *
+     * @param array $options
+     * @param ModelInterface $subject
+     * @param mixed ...$arguments
+     * @return ModelInterface
+     */
+	static public function fromModelWithOptions(array $options, ModelInterface $subject, ...$arguments) {
+        $obj = new static($subject, ...$arguments);
+        return $obj->setOptions($options)->execute()->get();
     }
 
     /**
@@ -321,7 +342,7 @@ final class Loader {
      */
 	public function execute() {
         foreach ($this->buildTree() as $eagerLoad) {
-            $eagerLoad->load();
+            $eagerLoad->load($this->options);
         }
 
         return $this;

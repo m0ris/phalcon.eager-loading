@@ -69,6 +69,28 @@ $robots = Loader::fromResultset(Robot::find(), [
 
 ```
 
+The usage of soft delete:
+```php
+<?php
+
+use \Sb\Framework\Mvc\Model\EagerLoadingTrait;
+
+trait MyEagerLoadingTrait
+{
+    // Name of field which is for "soft delete"
+    private $__eagerLoadingSoftDeleteName = 'delete_date';
+    // Value(s) of field which is for no "soft delete"
+    private $__eagerLoadingSoftDeleteValue = null;
+
+    use EagerLoadingTrait;
+}
+```
+```php
+<?php
+
+$robot = Robot::findFirst()->loadWithoutSoftDelete('Parts');
+```
+
 For more examples, return types etc visit the tests folder or take a look at the code, it's quite small.
 
 License

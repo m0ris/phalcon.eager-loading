@@ -5,6 +5,18 @@ use Sb\Framework\Mvc\Model\EagerLoading\Loader;
 trait EagerLoadingTrait {
 
     /**
+     * Name of field which is for "soft delete"
+     * @var string
+     */
+//    private $__eagerLoadingSoftDeleteName = 'delete_date';
+
+    /**
+     * Value(s) of field which is for no "soft delete"
+     * @var mixed
+     */
+//    private $__eagerLoadingSoftDeleteValue = null;
+
+    /**
      * <code>
      * <?php
      *
@@ -106,5 +118,33 @@ trait EagerLoadingTrait {
      */
 	public function load(...$arguments) {
         return Loader::fromModel($this, ...$arguments);
+    }
+
+    /**
+     * <code>
+     * <?php
+     *
+     * $manufacturer = Manufacturer::findFirstById(51);
+     *
+     * $manufacturer->loadWithoutSoftDelete('Robots.Parts');
+     *
+     * foreach ($manufacturer->robots as $robot) {
+     *    foreach ($robot->parts as $part) { ... }
+     * }
+     * </code>
+     *
+     * @param mixed ...$arguments
+     * @return self
+     */
+	public function loadWithoutSoftDelete(...$arguments) {
+        $softDeleteName = property_exists($this, '__eagerLoadingSoftDeleteName') ? $this->__eagerLoadingSoftDeleteName : 'delete_date';
+        $softDeleteValue = property_exists($this, '__eagerLoadingSoftDeleteValue') ? $this->__eagerLoadingSoftDeleteValue : null;
+        $options = [
+            'softDelete' => [
+                'name' => $softDeleteName,
+                'value' => $softDeleteValue,
+            ]
+        ];
+        return Loader::fromModelWithOptions($options, $this, ...$arguments);
     }
 }

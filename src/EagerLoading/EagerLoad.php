@@ -50,7 +50,7 @@ final class EagerLoad {
      *
      * @return $this
      */
-	public function load() {
+	public function load($options = null) {
         if (empty ($this->parent->getSubject())) {
             return $this;
         }
@@ -137,6 +137,27 @@ final class EagerLoad {
 
         if ($this->constraints) {
             call_user_func($this->constraints, $builder);
+        }
+
+        // realization any options
+        if (isset($options['softDelete'])) {
+            $softDeleteName = $options['softDelete']['name'];
+            $softDeleteValue = $options['softDelete']['value'];
+
+            $model = new $relReferencedModel();
+            $metadata =  $model->getModelsMetaData();
+            $attributes = $metadata->getAttributes($model);
+            if (in_array($softDeleteName, $attributes)) {
+                if ($softDeleteValue === null) {
+                    $builder->andWhere("$softDeleteName IS NULL");
+                } elseif (is_scalar($softDeleteValue)) {
+                    $builder->andWhere("$softDeleteName = :value:", ['value' => $softDeleteValue]);
+                } elseif (is_array($softDeleteValue)) {
+                    $builder->inWhere($softDeleteName, $softDeleteValue);
+                } else {
+                    throw new \Exception('Value of soft delete can be only NULL, scalar or array');
+                }
+            }
         }
 
         $records = [];
