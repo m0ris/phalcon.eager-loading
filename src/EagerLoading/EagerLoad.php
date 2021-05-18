@@ -82,12 +82,9 @@ final class EagerLoad {
 
 		$subjectSize         = count($this->parent->getSubject());
         $isManyToManyForMany = FALSE;
-
-        $builder = new QueryBuilder;
+        
+        $builder = new QueryBuilder($relParams);
         $builder->from($relReferencedModel);
-        if (isset($relParams['order'])) {
-            $builder->orderBy($relParams['order']);
-        }
 
         if ($isThrough = $relation->isThrough()) {
             if ($subjectSize === 1) {
