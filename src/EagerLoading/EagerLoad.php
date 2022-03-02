@@ -137,9 +137,14 @@ final class EagerLoad {
         }
 
         // realization any options
-        if (isset($options['softDelete'])) {
-            $softDeleteName = $options['softDelete']['name'];
-            $softDeleteValue = $options['softDelete']['value'];
+        if (isset($options['softDelete'])) {          
+            $config = \Phalcon\Di::getDefault()->getConfig();
+            
+            $reflectionClass = new \ReflectionClass($relReferencedModel);
+            $defaultProperties = $reflectionClass->getDefaultProperties();
+            
+            $softDeleteName = array_key_exists('__eagerLoadingSoftDeleteName', $defaultProperties) ? $defaultProperties['__eagerLoadingSoftDeleteName'] : $config->path('eagerLoadingSoftDelete.name', 'delete_date');
+            $softDeleteValue = array_key_exists('__eagerLoadingSoftDeleteValue', $defaultProperties) ? $defaultProperties['__eagerLoadingSoftDeleteValue'] : $config->path('eagerLoadingSoftDelete.value', NULL); 
 
             $model = new $relReferencedModel();
             $metadata =  $model->getModelsMetaData();
