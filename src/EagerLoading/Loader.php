@@ -128,6 +128,31 @@ final class Loader {
 
         return $ret;
     }
+    
+    /**
+     * Create and get from a mixed $subject without soft deleted records
+     *
+     * @param ModelInterface|ModelInterface[]|Simple $subject
+     * @param mixed ...$arguments
+	 * @throws \InvalidArgumentException
+     * @return mixed
+     */
+	static public function fromWithoutSoftDelete($subject, ...$arguments) {
+        if ($subject instanceof ModelInterface) {
+            $ret = static::fromModelWithoutSoftDelete($subject, ...$arguments);
+		}
+		else if ($subject instanceof Simple) {
+            $ret = static::fromResultsetWithoutSoftDelete($subject, ...$arguments);
+		}
+		else if (is_array($subject)) {
+            $ret = static::fromArrayWithoutSoftDelete($subject, ...$arguments);
+		}
+		else {
+            throw new \InvalidArgumentException(static::E_INVALID_SUBJECT);
+        }
+
+        return $ret;
+    }
 
     /**
      * Create and get from a Model
@@ -141,14 +166,14 @@ final class Loader {
     }
     
     /**
-     * Create and get from a Model with any options like "soft delete"
+     * Create and get from a Model without soft deleted records
      *
-     * @param array $options
      * @param ModelInterface $subject
      * @param mixed ...$arguments
      * @return ModelInterface
      */
-	static public function fromModelWithOptions(array $options, ModelInterface $subject, ...$arguments) {
+	static public function fromModelWithoutSoftDelete(ModelInterface $subject, ...$arguments) {
+        $options = ['softDelete' => 'softDelete'];
         $obj = new static($subject, ...$arguments);
         return $obj->setOptions($options)->execute()->get();
     }
@@ -163,6 +188,19 @@ final class Loader {
 	static public function fromArray(array $subject, ...$arguments) {
         return (new static($subject, ...$arguments))->execute()->get();
     }
+    
+    /**
+     * Create and get from an array without soft deleted records
+     *
+     * @param ModelInterface[] $subject
+     * @param mixed ...$arguments
+     * @return array
+     */
+	static public function fromArrayWithoutSoftDelete(array $subject, ...$arguments) {
+        $options = ['softDelete' => 'softDelete'];
+        $obj = new static($subject, ...$arguments);
+        return $obj->setOptions($options)->execute()->get();
+    }
 
     /**
      * Create and get from a Resultset
@@ -173,6 +211,19 @@ final class Loader {
      */
 	static public function fromResultset(Simple $subject, ...$arguments) {
         return (new static($subject, ...$arguments))->execute()->get();
+    }
+    
+    /**
+     * Create and get from a Resultset without soft deleted records
+     *
+     * @param Simple $subject
+     * @param mixed ...$arguments
+     * @return Simple
+     */
+	static public function fromResultsetWithoutSoftDelete(Simple $subject, ...$arguments) {
+        $options = ['softDelete' => 'softDelete'];
+        $obj = new static($subject, ...$arguments);
+        return $obj->setOptions($options)->execute()->get();
     }
 
     /**

@@ -6,7 +6,7 @@ Installation
 -----
 
 ```bash
-composer require wojtek77/phalcon.eager-loading:dev-master
+    composer require wojtek77/phalcon.eager-loading:dev-master
 ```
 
 Usage
@@ -69,26 +69,45 @@ $robots = Loader::fromResultset(Robot::find(), [
 
 ```
 
-The usage of soft delete:
+
+Usage with soft delete
+-----
+
+By default eager load without soft deleted entries operates on 'delete_date' field, where NULL value represents not deleted records.
+
+It is possible to change this behavior globally, by adding to config:
+
+```
+'eagerLoadingSoftDelete' => [
+    'name' => 'delete_date', //name of flag column for "soft delete"
+    'value' => null, //value of a flag column for not deleted record
+]
+```
+
+Also, there is possibility, to change soft delete field-value only for specific model:
+    
 ```php
 <?php
+use Phalcon\Mvc\Model;
 
-use \Sb\Framework\Mvc\Model\EagerLoadingTrait;
-
-trait MyEagerLoadingTrait
+class Part extends Model
 {
-    // Name of field which is for "soft delete"
-    private $__eagerLoadingSoftDeleteName = 'delete_date';
-    // Value(s) of field which is for no "soft delete"
-    private $__eagerLoadingSoftDeleteValue = null;
-
-    use EagerLoadingTrait;
+    private $__eagerLoadingSoftDeleteName = 'delete_date'; //name of flag column for "soft delete"
+    private $__eagerLoadingSoftDeleteValue = null; //value of a flag column for not deleted record
 }
 ```
+
+The usage of soft delete:
+
 ```php
 <?php
+use Sb\Framework\Mvc\Model\EagerLoading\Loader;
 
 $robot = Robot::findFirst()->loadWithoutSoftDelete('Parts');
+
+
+// Because Robot::find() returns a resultset, so in that case this is solved with:
+$robots = Loader::fromResultsetWithoutSoftDelete(Robot::find(), 'Parts');
 ```
 
 For more examples, return types etc visit the tests folder or take a look at the code, it's quite small.

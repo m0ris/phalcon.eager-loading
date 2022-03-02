@@ -137,14 +137,6 @@ trait EagerLoadingTrait {
      * @return self
      */
 	public function loadWithoutSoftDelete(...$arguments) {
-        $softDeleteName = property_exists($this, '__eagerLoadingSoftDeleteName') ? $this->__eagerLoadingSoftDeleteName : 'delete_date';
-        $softDeleteValue = property_exists($this, '__eagerLoadingSoftDeleteValue') ? $this->__eagerLoadingSoftDeleteValue : null;
-        $options = [
-            'softDelete' => [
-                'name' => $softDeleteName,
-                'value' => $softDeleteValue,
-            ]
-        ];
-        return Loader::fromModelWithOptions($options, $this, ...$arguments);
+        return Loader::fromModelWithoutSoftDelete($this, ...$arguments);
     }
 }
