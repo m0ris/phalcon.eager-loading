@@ -6,7 +6,7 @@ Installation
 -----
 
 ```bash
-    composer require wojtek77/phalcon.eager-loading:dev-master
+composer require wojtek77/phalcon.eager-loading:dev-master
 ```
 
 Usage
